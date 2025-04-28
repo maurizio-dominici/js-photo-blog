@@ -27,6 +27,7 @@ const generatePostCard = (post) => {
 // ^ DATI
 
 const gridPostEl = document.getElementById("grid-post");
+const layOverEl = document.querySelector(".layover");
 
 // ^ SVOLGIMENTO
 
@@ -48,8 +49,29 @@ axios.get(apiUri).then((response) => {
 
   postsNodes.forEach((postNode) => {
     postNode.addEventListener("click", () => {
+      console.log(postNode);
+
       const imageSrc = document.querySelector(`#${postNode.id} img`).src;
-      console.log(imageSrc);
+      const imageAlt = document.querySelector(`#${postNode.id} img`).alt;
+      // console.log(imageSrc);
+      // console.log(imageAlt);
+
+      layOverEl.classList.add("layover-visible");
+      layOverEl.classList.remove("layover");
+
+      layOverEl.innerHTML = `
+        <div class="container">
+          <button id="close-layover">Chiudi</button>
+          <img src="${imageSrc}" alt="${imageAlt}"/>
+        </div>
+      `;
+
+      const closeLayoverEl = document.getElementById("close-layover");
+
+      closeLayoverEl.addEventListener("click", () => {
+        layOverEl.classList.add("layover");
+        layOverEl.classList.remove("layover-visible");
+      });
     });
   });
 });

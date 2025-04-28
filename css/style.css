@@ -121,9 +121,39 @@ ul {
 
 .layover {
   display: none;
+  /* background-color: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(3px);
+
+  position: fixed;
+  z-index: 10;
+  inset: 0; */
+}
+.layover-visible {
+  display: block;
   background-color: rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(3px);
+
   position: fixed;
   z-index: 10;
   inset: 0;
+}
+
+.layover-visible .container {
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 40px;
+}
+.layover-visible .container button {
+  background-color: #cd754f;
+  padding: 4px;
+  border-radius: 16px;
+}
+
+.layover-visible .container img {
+  max-width: 450px;
+  flex-grow: 1;
 }
