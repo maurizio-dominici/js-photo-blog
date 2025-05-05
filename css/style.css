@@ -103,6 +103,7 @@ ul {
 .card:hover {
   cursor: pointer;
   transform: rotate(30deg);
+  transition: 2s;
   z-index: 5;
 }
 

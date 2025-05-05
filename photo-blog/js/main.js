@@ -53,10 +53,8 @@ axios
 
     // ! CODICE PIU RAPIDO "EVENT DELEGATION"
     gridPostEl.addEventListener("click", (event) => {
-      // Trova l'elemento più vicino con questa classe
-      const postNode = event.target.closest(".card-header");
-      // Se non ha cliccato su un post, esci
-      if (!postNode) return;
+      const postNode = event.target.closest(".card-header"); // Trova l'elemento più vicino con questa classe
+      if (!postNode) return; // Se non ha cliccato su un post, esci
 
       const imageSrc = postNode.querySelector("img").src;
       const imageAlt = postNode.querySelector("img").alt;
