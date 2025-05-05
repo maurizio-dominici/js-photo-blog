@@ -28,50 +28,85 @@ const generatePostCard = (post) => {
 
 const gridPostEl = document.getElementById("grid-post");
 const layOverEl = document.querySelector(".layover");
+const apiUri = "https://lanciweb.github.io/demo/api/pictures/";
 
 // ^ SVOLGIMENTO
 
-apiUri = "https://lanciweb.github.io/demo/api/pictures/";
+axios
+  .get(apiUri)
+  .then((response) => {
+    const posts = response.data;
+    console.log(posts);
 
-axios.get(apiUri).then((response) => {
-  const posts = response.data;
-  console.log(posts);
+    // ! CONTROLLO SE LA CHIAMATA API MI RESTITUISCE UN ARRAY
+    if (posts.length === 0) {
+      gridPostEl.innerHTML = `<p id="error-message">Nessun post disponibile.</p>`;
+      return;
+    }
 
-  let cardsHtml = "";
+    let cardsHtml = "";
+    posts.forEach((post) => {
+      cardsHtml += generatePostCard(post);
+    });
 
-  posts.forEach((post) => {
-    cardsHtml += generatePostCard(post);
-  });
+    gridPostEl.innerHTML += cardsHtml;
 
-  gridPostEl.innerHTML += cardsHtml;
+    // ! CODICE PIU RAPIDO "EVENT DELEGATION"
+    gridPostEl.addEventListener("click", (event) => {
+      // Trova l'elemento più vicino con questa classe
+      const postNode = event.target.closest(".card-header");
+      // Se non ha cliccato su un post, esci
+      if (!postNode) return;
 
-  const postsNodes = document.querySelectorAll(".card-header");
+      const imageSrc = postNode.querySelector("img").src;
+      const imageAlt = postNode.querySelector("img").alt;
 
-  postsNodes.forEach((postNode) => {
-    postNode.addEventListener("click", () => {
-      console.log(postNode);
-
-      const imageSrc = document.querySelector(`#${postNode.id} img`).src;
-      const imageAlt = document.querySelector(`#${postNode.id} img`).alt;
-      // console.log(imageSrc);
-      // console.log(imageAlt);
-
-      layOverEl.classList.add("layover-visible");
-      layOverEl.classList.remove("layover");
+      layOverEl.classList.toggle("layover-visible");
+      layOverEl.classList.toggle("layover");
 
       layOverEl.innerHTML = `
-        <div class="container">
-          <button id="close-layover">Chiudi</button>
-          <img src="${imageSrc}" alt="${imageAlt}"/>
-        </div>
+      <div class="container">
+      <button id="close-layover">Chiudi</button>
+      <img src="${imageSrc}" alt="${imageAlt}"/>
+      </div>
       `;
 
       const closeLayoverEl = document.getElementById("close-layover");
-
       closeLayoverEl.addEventListener("click", () => {
-        layOverEl.classList.add("layover");
-        layOverEl.classList.remove("layover-visible");
+        layOverEl.classList.toggle("layover");
+        layOverEl.classList.toggle("layover-visible");
       });
     });
+
+    // ! CODICE PIU RIPETITIVO
+    // const postsNodes = document.querySelectorAll(".card-header");
+    // postsNodes.forEach((postNode) => {
+    //   postNode.addEventListener("click", () => {
+    //     console.log(postNode);
+
+    //     const imageSrc = document.querySelector(`#${postNode.id} img`).src;
+    //     const imageAlt = document.querySelector(`#${postNode.id} img`).alt;
+
+    //     layOverEl.classList.add("layover-visible");
+    //     layOverEl.classList.remove("layover");
+
+    //     layOverEl.innerHTML = `
+    //     <div class="container">
+    //       <button id="close-layover">Chiudi</button>
+    //       <img src="${imageSrc}" alt="${imageAlt}"/>
+    //     </div>
+    //   `;
+
+    //     const closeLayoverEl = document.getElementById("close-layover");
+
+    //     closeLayoverEl.addEventListener("click", () => {
+    //       layOverEl.classList.add("layover");
+    //       layOverEl.classList.remove("layover-visible");
+    //     });
+    //   });
+    // });
+  })
+  .catch((error) => {
+    console.error("Error fetching posts:", error);
+    gridPostEl.innerHTML = `<p id="error-message">Oops! impossibile caricare i post, perfavore riprovare più tardi.</p>`;
   });
-});
